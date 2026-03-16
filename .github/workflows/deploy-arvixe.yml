@@ -1,0 +1,51 @@
+name: Deploy to Arvixe
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate repo name
+        run: |
+          test -n "${GITHUB_REPOSITORY##*/}"
+
+      - name: Deploy site via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.ARVIXE_FTP_HOST }}
+          username: ${{ secrets.ARVIXE_FTP_USERNAME }}
+          password: ${{ secrets.ARVIXE_FTP_PASSWORD }}
+          port: ${{ secrets.ARVIXE_FTP_PORT }}
+          protocol: ftps
+          security: loose
+          local-dir: ./
+          server-dir: /public_html/${{ github.event.repository.name }}/
+          exclude: |
+            **/.git*/**
+            **/.git*
+            **/node_modules/**
+            **/.github/**
+            **/.env
+            **/.env.*
+            **/*.pem
+            **/*.key
+            **/Thumbs.db
+            **/.DS_Store
+
+      - name: Summary
+        run: |
+          echo "Deployed ${GITHUB_REPOSITORY} to /public_html/${GITHUB_REPOSITORY##*/}/" >> $GITHUB_STEP_SUMMARY
