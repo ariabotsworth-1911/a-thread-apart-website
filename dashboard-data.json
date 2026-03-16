@@ -1,11 +1,11 @@
 ﻿{
-    "generatedAt":  "2026-03-15T20:56:34.4368482-07:00",
+    "generatedAt":  "2026-03-15T20:57:47.6881493-07:00",
     "company":  "A Thread Apart",
     "objective":  "Close the first deal, get one creator storefront live, execute one campaign, and capture proof points.",
     "status":  {
-                   "topBlockers":  {
+                   "topBlockers":  [
 
-                                   },
+                                   ],
                    "immediatePriorityOrder":  [
                                                   "Verify correct Shopify store/domain/token",
                                                   "Lock first creator",
@@ -19,16 +19,16 @@
                                             "eveningWrapUp":  "8 PM PT"
                                         }
                },
-    "lanes":  {
+    "lanes":  [
 
-              },
+              ],
     "storefront":  {
-                       "mvpScope":  {
+                       "mvpScope":  [
 
-                                    },
-                       "launchChecklist":  {
+                                    ],
+                       "launchChecklist":  [
 
-                                           }
+                                           ]
                    },
     "operatingRules":  {
                            "posture":  [
@@ -73,20 +73,20 @@
                                         "campaignsInProgress":  null,
                                         "merchStorefrontUpdates":  null,
                                         "revenue":  null,
-                                        "topPrioritiesAhead":  {
+                                        "topPrioritiesAhead":  [
 
-                                                               },
-                                        "blockers":  {
+                                                               ],
+                                        "blockers":  [
 
-                                                     }
+                                                     ]
                                     },
                          "eveningWrap":  {
-                                             "doneToday":  {
+                                             "doneToday":  [
 
-                                                           },
-                                             "rolledToTomorrow":  {
+                                                           ],
+                                             "rolledToTomorrow":  [
 
-                                                                  }
+                                                                  ]
                                          }
                      },
     "sources":  {
