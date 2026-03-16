@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brambo — Book Creators Like You Book Services</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* =============================================
+           RESET & BASE
+        ============================================= */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg:    #0A0A0A;
+            --s1:    #111111;
+            --s2:    #171717;
+            --lime:  #B8FF00;
+            --lime2: rgba(184,255,0,.18);
+            --lime3: rgba(184,255,0,.07);
+            --w:     #FFFFFF;
+            --w50:   rgba(255,255,255,.5);
+            --w20:   rgba(255,255,255,.2);
+            --w08:   rgba(255,255,255,.08);
+            --w04:   rgba(255,255,255,.04);
+        }
+
+        html { scroll-behavior: smooth; cursor: none; }
+
+        body {
+            background: var(--bg);
+            color: var(--w);
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* =============================================
+           CUSTOM CURSOR
+        ============================================= */
+        .cursor {
+            position: fixed;
+            width: 12px; height: 12px;
+            border-radius: 50%;
+            background: var(--lime);
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform .1s ease, width .2s ease, height .2s ease, background .2s ease;
+            mix-blend-mode: difference;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            border: 1px solid rgba(184,255,0,.4);
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: all .15s ease;
+        }
+        body:hover .cursor { opacity: 1; }
+        a:hover ~ .cursor, button:hover ~ .cursor { width: 20px; height: 20px; }
+
+        /* =============================================
+           TYPOGRAPHY
+        ============================================= */
+        .dxl  { font-size: clamp(3.5rem, 9vw, 8rem);  font-weight: 700; line-height: .96; letter-spacing: -.04em; }
+        .dlg  { font-size: clamp(2rem,   5vw, 4.5rem); font-weight: 700; line-height: 1.0; letter-spacing: -.03em; }
+        .dmd  { font-size: clamp(1.3rem, 2.5vw, 2rem); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; }
+        .tlg  { font-size: clamp(1rem, 1.4vw, 1.15rem); line-height: 1.75; }
+        .tsm  { font-size: .875rem; line-height: 1.6; }
+        .mut  { color: var(--w50); }
+        .lime { color: var(--lime); }
+
+        /* =============================================
+           LAYOUT
+        ============================================= */
+        .wrap { max-width: 1320px; margin: 0 auto; padding: 0 48px; }
+        .sec  { padding: 140px 0; }
+        .full { width: 100%; }
+
+        /* =============================================
+           LOGO
+        ============================================= */
+        .logo-svg { height: 28px; width: auto; display: block; }
+
+        /* =============================================
+           BUTTONS
+        ============================================= */
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 28px; border-radius: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: .9rem; font-weight: 600; text-decoration: none;
+            cursor: none; border: none; transition: all .2s; white-space: nowrap;
+        }
+        .btnlg { padding: 18px 40px; font-size: 1rem; }
+        .lime-btn  { background: var(--lime); color: #0A0A0A; }
+        .lime-btn:hover  { background: #fff; transform: translateY(-2px); }
+        .ghost-btn { background: transparent; color: var(--w); border: 1px solid var(--w20); }
+        .ghost-btn:hover { border-color: var(--w50); background: var(--w04); transform: translateY(-2px); }
+
+        /* =============================================
+           TAGS
+        ============================================= */
+        .tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 100px;
+            font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+        }
+        .tag-lime  { background: var(--lime3); color: var(--lime);  border: 1px solid rgba(184,255,0,.25); }
+        .tag-white { background: var(--w04);   color: var(--w50);   border: 1px solid var(--w08); }
+
+        /* =============================================
+           DIVIDER
+        ============================================= */
+        .div { width: 100%; height: 1px; background: var(--w08); }
+
+        /* =============================================
+           NAVIGATION
+        ============================================= */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+            padding: 24px 0; transition: all .3s ease;
+        }
+        .nav.sc {
+            background: rgba(10,10,10,.88);
+            backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+            border-bottom: 1px solid var(--w08); padding: 16px 0;
+        }
+        .nav-i { display: flex; align-items: center; justify-content: space-between; }
+        .nav-links { display: flex; align-items: center; gap: 40px; list-style: none; }
+        .nav-links a { color: var(--w50); text-decoration: none; font-size: .88rem; font-weight: 500; transition: color .2s; cursor: none; }
+        .nav-links a:hover { color: var(--w); }
+        .nav-end { display: flex; align-items: center; gap: 10px; }
+
+        /* =============================================
+           HERO
+        ============================================= */
+        .hero {
+            min-height: 100vh; display: flex; align-items: flex-end;
+            position: relative; overflow: hidden;
+            padding: 140px 0 80px;
+        }
+
+        /* Animated background blobs */
+        .hero-bg {
+            position: absolute; inset: 0; z-index: 0; overflow: hidden;
+        }
+        .blob {
+            position: absolute; border-radius: 50%;
+            filter: blur(120px); opacity: .35; animation: drift 12s ease-in-out infinite alternate;
+        }
+        .blob-1 { width: 700px; height: 700px; background: rgba(184,255,0,.12); top: -200px; right: -100px; animation-delay: 0s; }
+        .blob-2 { width: 500px; height: 500px; background: rgba(80,100,255,.08); bottom: -150px; left: -100px; animation-delay: -4s; }
+        .blob-3 { width: 400px; height: 400px; background: rgba(184,255,0,.06); top: 40%; left: 30%; animation-delay: -8s; }
+        @keyframes drift { from{transform:translate(0,0) scale(1)} to{transform:translate(30px,-30px) scale(1.05)} }
+
+        /* Fine grid overlay */
+        .hero-grid {
+            position: absolute; inset: 0; z-index: 0;
+            background-image: linear-gradient(var(--w08) 1px, transparent 1px), linear-gradient(90deg, var(--w08) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 70%);
+        }
+
+        .hero-inner { position: relative; z-index: 1; width: 100%; }
+        .hero-eyebrow { margin-bottom: 36px; }
+
+        /* Word reveal */
+        .hero-hl { overflow: hidden; }
+        .hero-hl .word {
+            display: inline-block;
+            opacity: 0; transform: translateY(80px);
+            transition: opacity .7s ease, transform .7s ease;
+            margin-right: .22em;
+        }
+        .hero-hl .word.em { color: var(--lime); }
+        .hero-hl .word.vis { opacity: 1; transform: translateY(0); }
+
+        .hero-bottom {
+            display: flex; align-items: flex-end; justify-content: space-between;
+            margin-top: 72px; padding-top: 48px; border-top: 1px solid var(--w08);
+            flex-wrap: wrap; gap: 32px;
+        }
+        .hero-sub { max-width: 440px; }
+        .hero-ctas { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+        /* =============================================
+           STATS BAR (typographic)
+        ============================================= */
+        .stats-bar {
+            background: var(--s1); border-top: 1px solid var(--w08); border-bottom: 1px solid var(--w08);
+        }
+        .stats-inner { display: flex; }
+        .stat-cell {
+            flex: 1; padding: 40px 48px; border-right: 1px solid var(--w08);
+            display: flex; flex-direction: column; gap: 6px;
+        }
+        .stat-cell:last-child { border-right: none; }
+        .stat-n { font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+        .stat-l { color: var(--w50); font-size: .8rem; font-weight: 500; letter-spacing: .05em; text-transform: uppercase; }
+
+        /* =============================================
+           MARQUEE
+        ============================================= */
+        .mq { background: var(--lime); overflow: hidden; padding: 14px 0; }
+        .mq-track { display: flex; animation: mq 28s linear infinite; }
+        .mq-item { flex-shrink: 0; display: flex; align-items: center; gap: 16px; padding: 0 28px; color: #0A0A0A; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; }
+        .mq-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(0,0,0,.3); flex-shrink: 0; }
+        @keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+        /* =============================================
+           SPLIT SECTION (Creator / Brand)
+        ============================================= */
+        .split-grid { display: grid; grid-template-columns: 1fr 1fr; }
+        .split-panel {
+            padding: 80px 64px; border-right: 1px solid var(--w08);
+            position: relative; overflow: hidden;
+            transition: background .4s ease;
+        }
+        .split-panel:last-child { border-right: none; }
+        .split-panel:hover { background: var(--s1); }
+        .sp-num { font-size: 7rem; font-weight: 700; letter-spacing: -.06em; line-height: 1; color: var(--w08); margin-bottom: -20px; }
+        .sp-ico { font-size: 2.5rem; margin-bottom: 24px; }
+        .sp-title { font-size: 2rem; font-weight: 700; letter-spacing: -.03em; margin-bottom: 12px; }
+        .sp-sub { color: var(--w50); margin-bottom: 36px; font-size: .95rem; }
+        .sp-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-bottom: 44px; }
+        .sp-item { display: flex; align-items: flex-start; gap: 12px; font-size: .88rem; color: var(--w50); }
+        .sp-check { color: var(--lime); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+        /* =============================================
+           CREATOR CARDS (editorial)
+        ============================================= */
+        .creators-intro { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 60px; }
+        .editorial-grid { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 16px; }
+
+        /* Spotlight (large) card */
+        .card-spot {
+            grid-row: 1 / 3;
+            background: var(--s1); border: 1px solid var(--w08); border-radius: 24px;
+            overflow: hidden; display: flex; flex-direction: column;
+            transition: border-color .3s;
+        }
+        .card-spot:hover { border-color: var(--lime); }
+        .spot-banner {
+            height: 240px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 6rem; position: relative; overflow: hidden;
+        }
+        .spot-banner::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to bottom, transparent 50%, var(--s1) 100%);
+        }
+        .spot-body { padding: 32px; flex: 1; display: flex; flex-direction: column; }
+        .spot-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+        .spot-av { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; border: 3px solid var(--lime); }
+        .spot-vrf { display: flex; align-items: center; gap: 5px; color: var(--lime); font-size: .72rem; font-weight: 700; }
+        .spot-name { font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 4px; }
+        .spot-niche { color: var(--w50); font-size: .85rem; margin-bottom: 24px; }
+        .spot-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; padding: 20px; background: var(--s2); border-radius: 14px; margin-bottom: 20px; }
+        .spot-sn { font-size: 1.2rem; font-weight: 700; text-align: center; }
+        .spot-sl { font-size: .65rem; color: var(--w50); text-align: center; text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
+        .spot-pkgs { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+        .spot-pkg { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--s2); border-radius: 12px; }
+        .spot-pname { font-size: .82rem; color: var(--w50); }
+        .spot-pprice { font-size: .95rem; font-weight: 700; color: var(--lime); }
+        .spot-book { display: block; width: 100%; text-align: center; padding: 14px; background: var(--lime); color: #0A0A0A; border: none; border-radius: 12px; font-size: .9rem; font-weight: 700; cursor: none; transition: all .2s; text-decoration: none; font-family: inherit; }
+        .spot-book:hover { background: #fff; }
+
+        /* Small cards */
+        .card-sm {
+            background: var(--s1); border: 1px solid var(--w08); border-radius: 20px;
+            padding: 28px; transition: border-color .3s;
+        }
+        .card-sm:hover { border-color: var(--w20); }
+        .sm-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+        .sm-av { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 700; flex-shrink: 0; }
+        .sm-info {}
+        .sm-name { font-size: 1rem; font-weight: 700; }
+        .sm-niche { font-size: .78rem; color: var(--w50); }
+        .sm-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+        .sm-stat-box { background: var(--s2); border-radius: 10px; padding: 12px; }
+        .sm-sn { font-size: .95rem; font-weight: 700; }
+        .sm-sl { font-size: .65rem; color: var(--w50); text-transform: uppercase; letter-spacing: .05em; margin-top: 2px; }
+        .sm-pkg { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--s2); border-radius: 10px; margin-bottom: 8px; }
+        .sm-pn { font-size: .76rem; color: var(--w50); }
+        .sm-pp { font-size: .85rem; font-weight: 700; }
+        .sm-book { display: block; width: 100%; text-align: center; padding: 11px; background: var(--w08); color: var(--w); border: 1px solid var(--w08); border-radius: 10px; font-size: .83rem; font-weight: 600; cursor: none; transition: all .2s; text-decoration: none; margin-top: 14px; font-family: inherit; }
+        .sm-book:hover { background: var(--lime); color: #0A0A0A; border-color: var(--lime); }
+
+        /* =============================================
+           HOW IT WORKS (chapter layout)
+        ============================================= */
+        .how-sec { background: var(--s1); }
+        .how-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 80px; }
+        .how-tabs { display: flex; gap: 3px; padding: 3px; background: var(--s2); border-radius: 100px; }
+        .how-tab { padding: 9px 22px; border-radius: 100px; font-size: .85rem; font-weight: 600; cursor: none; transition: all .2s; color: var(--w50); border: none; background: none; font-family: inherit; }
+        .how-tab.on { background: var(--w); color: #0A0A0A; }
+        .chapters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--w08); border-radius: 20px; overflow: hidden; }
+        .chapter { padding: 48px 40px; border-right: 1px solid var(--w08); position: relative; transition: background .3s; }
+        .chapter:last-child { border-right: none; }
+        .chapter:hover { background: var(--s2); }
+        .ch-num { font-size: 6rem; font-weight: 700; letter-spacing: -.06em; line-height: 1; color: var(--w04); margin-bottom: -10px; }
+        .ch-lime { color: var(--lime); }
+        .ch-ico { width: 52px; height: 52px; border-radius: 14px; background: var(--w04); border: 1px solid var(--w08); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 24px; }
+        .ch-title { font-size: 1.15rem; font-weight: 700; letter-spacing: -.01em; margin-bottom: 10px; }
+        .ch-desc { color: var(--w50); font-size: .87rem; line-height: 1.65; }
+
+        /* =============================================
+           PACKAGES
+        ============================================= */
+        .pkg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+        .pkg-card {
+            background: var(--s1); border: 1px solid var(--w08); border-radius: 20px;
+            padding: 32px; transition: all .3s; position: relative; overflow: hidden;
+        }
+        .pkg-card:hover { border-color: var(--w20); transform: translateY(-4px); background: var(--s2); }
+        .pkg-card.hot { border-color: var(--lime); }
+        .pkg-card.hot::before {
+            content: 'POPULAR'; position: absolute; top: 20px; right: 20px;
+            background: var(--lime); color: #0A0A0A; font-size: .6rem; font-weight: 800;
+            letter-spacing: .12em; padding: 4px 10px; border-radius: 100px;
+        }
+        .pk-ico { font-size: 2.2rem; margin-bottom: 20px; }
+        .pk-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+        .pk-desc { color: var(--w50); font-size: .8rem; line-height: 1.6; margin-bottom: 24px; }
+        .pk-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 20px; border-top: 1px solid var(--w08); padding-top: 20px; }
+        .pk-from { font-size: .72rem; color: var(--w50); }
+        .pk-amt { font-size: 1.8rem; font-weight: 700; letter-spacing: -.03em; color: var(--lime); }
+        .pk-per { font-size: .72rem; color: var(--w50); }
+        .pk-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+        .pk-li { display: flex; align-items: center; gap: 9px; font-size: .78rem; color: var(--w50); }
+        .pk-li::before { content: '✓'; color: var(--lime); font-weight: 700; flex-shrink: 0; }
+
+        /* =============================================
+           FEATURES (brutalist grid)
+        ============================================= */
+        .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--w08); }
+        .feat-block { padding: 44px 40px; border-right: 1px solid var(--w08); border-bottom: 1px solid var(--w08); position: relative; overflow: hidden; transition: background .3s; }
+        .feat-block:nth-child(3n) { border-right: none; }
+        .feat-block:nth-child(7), .feat-block:nth-child(8), .feat-block:nth-child(9) { border-bottom: none; }
+        .feat-block:hover { background: var(--s1); }
+        .feat-block:hover .feat-ico { transform: scale(1.1); }
+        .feat-ico { font-size: 2rem; margin-bottom: 18px; display: block; transition: transform .3s; }
+        .feat-title { font-size: .95rem; font-weight: 700; margin-bottom: 10px; }
+        .feat-desc { color: var(--w50); font-size: .82rem; line-height: 1.7; }
+
+        /* =============================================
+           SPOTLIGHT QUOTE (full-width interstitial)
+        ============================================= */
+        .interstitial { background: var(--lime); padding: 80px 0; text-align: center; }
+        .inter-text { font-size: clamp(1.5rem, 3.5vw, 3rem); font-weight: 700; letter-spacing: -.03em; color: #0A0A0A; line-height: 1.2; max-width: 900px; margin: 0 auto; }
+
+        /* =============================================
+           PRICING
+        ============================================= */
+        .pr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .pr-card { background: var(--s1); border: 1px solid var(--w08); border-radius: 24px; padding: 44px; transition: all .3s; }
+        .pr-card.hot { border-color: var(--lime); background: linear-gradient(160deg, rgba(184,255,0,.06) 0%, var(--s1) 60%); transform: scale(1.03); }
+        .pr-tier { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--w50); margin-bottom: 6px; }
+        .pr-name { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 8px; }
+        .pr-desc { color: var(--w50); font-size: .83rem; margin-bottom: 32px; }
+        .pr-price { display: flex; align-items: baseline; gap: 3px; margin-bottom: 6px; }
+        .pr-cur { font-size: .9rem; font-weight: 600; color: var(--w50); }
+        .pr-amt { font-size: 3.5rem; font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+        .pr-per { font-size: .82rem; color: var(--w50); }
+        .pr-note { font-size: .75rem; color: var(--w50); margin-bottom: 32px; }
+        .pr-div { height: 1px; background: var(--w08); margin-bottom: 28px; }
+        .pr-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 36px; }
+        .pr-feat { display: flex; align-items: center; gap: 10px; font-size: .83rem; color: var(--w50); }
+        .pr-chk { color: var(--lime); font-weight: 700; flex-shrink: 0; }
+
+        /* =============================================
+           CTA FINALE
+        ============================================= */
+        .cta-sec { background: var(--s1); border-top: 1px solid var(--w08); padding: 160px 0; overflow: hidden; position: relative; }
+        .cta-bg-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: clamp(6rem, 18vw, 18rem); font-weight: 700; letter-spacing: -.06em;
+            color: var(--w04); white-space: nowrap; pointer-events: none; user-select: none;
+            line-height: 1;
+        }
+        .cta-inner { position: relative; z-index: 1; text-align: center; }
+        .cta-hl { margin-bottom: 20px; }
+        .cta-sub { color: var(--w50); max-width: 460px; margin: 0 auto 48px; }
+        .cta-btns { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+
+        /* =============================================
+           FOOTER
+        ============================================= */
+        .foot { background: var(--bg); border-top: 1px solid var(--w08); padding: 72px 0 36px; }
+        .foot-grid { display: grid; grid-template-columns: 2.5fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 60px; }
+        .foot-brand p { color: var(--w50); font-size: .83rem; margin: 16px 0 24px; max-width: 300px; line-height: 1.7; }
+        .foot-socs { display: flex; gap: 10px; }
+        .foot-soc { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; background: var(--w04); border: 1px solid var(--w08); text-decoration: none; font-size: .85rem; transition: all .2s; cursor: none; }
+        .foot-soc:hover { background: var(--lime); color: #0A0A0A; border-color: var(--lime); }
+        .foot-col h4 { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--w50); margin-bottom: 20px; }
+        .foot-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+        .foot-links a { color: var(--w50); text-decoration: none; font-size: .83rem; transition: color .2s; cursor: none; }
+        .foot-links a:hover { color: var(--w); }
+        .foot-bot { display: flex; align-items: center; justify-content: space-between; padding-top: 36px; border-top: 1px solid var(--w08); }
+        .foot-copy { color: var(--w50); font-size: .78rem; }
+        .foot-legal { display: flex; gap: 24px; }
+        .foot-legal a { color: var(--w50); text-decoration: none; font-size: .78rem; transition: color .2s; cursor: none; }
+        .foot-legal a:hover { color: var(--w); }
+
+        /* =============================================
+           SCROLL ANIMATIONS
+        ============================================= */
+        .fu { opacity: 0; transform: translateY(32px); transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1); }
+        .fi { opacity: 0; transition: opacity .7s ease; }
+        .fu.v, .fi.v { opacity: 1; transform: none; }
+        .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}.d5{transition-delay:.5s}
+
+        /* =============================================
+           RESPONSIVE
+        ============================================= */
+        @media(max-width:1100px) {
+            .pkg-grid { grid-template-columns: repeat(2,1fr); }
+            .editorial-grid { grid-template-columns: 1fr; }
+            .card-spot { grid-row: auto; }
+        }
+        @media(max-width:900px) {
+            .wrap { padding: 0 24px; }
+            .sec { padding: 90px 0; }
+            .hero { padding: 110px 0 70px; }
+            .split-grid, .chapters, .feat-grid, .pr-grid { grid-template-columns: 1fr; }
+            .split-panel { border-right: none; border-bottom: 1px solid var(--w08); }
+            .chapter { border-right: none; border-bottom: 1px solid var(--w08); }
+            .chapter:last-child { border-bottom: none; }
+            .feat-block:nth-child(3n) { border-right: 1px solid var(--w08); }
+            .feat-block:nth-child(odd) { border-right: none; }
+            .feat-grid { grid-template-columns: 1fr 1fr; }
+            .pr-card.hot { transform: none; }
+            .foot-grid { grid-template-columns: 1fr 1fr; }
+            .stats-inner { flex-direction: column; }
+            .stat-cell { border-right: none; border-bottom: 1px solid var(--w08); }
+            .nav-links { display: none; }
+        }
+        @media(max-width:600px) {
+            .pkg-grid { grid-template-columns: 1fr; }
+            .feat-grid { grid-template-columns: 1fr; }
+            .hero-bottom { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+    <div class="wrap">
+        <div class="nav-i">
+
+            <!-- LOGO SVG -->
+            <a href="#" style="text-decoration:none;cursor:none;">
+                <svg class="logo-svg" viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- B badge mark -->
+                    <rect width="36" height="36" rx="8" fill="#B8FF00"/>
+                    <!-- Custom B letterform inside badge -->
+                    <path d="M10 8h10c3.314 0 6 2.686 6 6s-2.686 6-6 6H10V8z" fill="#0A0A0A"/>
+                    <path d="M10 20h11c3.866 0 7 3.134 7 7s-3.134 7-7 7H10V20z" fill="#0A0A0A"/>
+                    <rect x="10" y="8" width="3" height="26" fill="#0A0A0A"/>
+                    <!-- Wordmark RAMBO -->
+                    <text x="48" y="26" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="22" fill="#FFFFFF" letter-spacing="-0.03em">RAMBO</text>
+                </svg>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="#how">How It Works</a></li>
+                <li><a href="#creators">Creators</a></li>
+                <li><a href="#brands">For Brands</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+            </ul>
+            <div class="nav-end">
+                <a href="#" class="btn ghost-btn">Log In</a>
+                <a href="#" class="btn lime-btn">Get Started</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+════════════════════════════════════════════ -->
+<section class="hero">
+    <div class="hero-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    <div class="hero-grid"></div>
+    <div class="wrap hero-inner">
+        <div class="hero-eyebrow fu">
+            <span class="tag tag-lime">✦ Creator Commerce Platform</span>
+        </div>
+        <h1 class="dxl hero-hl" id="hero-hl">
+            Book creators like you book services.
+        </h1>
+        <div class="hero-bottom fu d2">
+            <p class="tlg mut hero-sub">
+                Brambo is where creators turn their influence into bookable products — and brands discover, buy, and manage campaigns without agency friction.
+            </p>
+            <div class="hero-ctas">
+                <a href="#" class="btn lime-btn btnlg">Start as a Creator ↗</a>
+                <a href="#" class="btn ghost-btn btnlg">Find Creators</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     STATS BAR
+════════════════════════════════════════════ -->
+<div class="stats-bar">
+    <div class="stats-inner">
+        <div class="stat-cell fu">
+            <div class="stat-n lime">12,000+</div>
+            <div class="stat-l">Active Creators</div>
+        </div>
+        <div class="stat-cell fu d1">
+            <div class="stat-n">$4.2M+</div>
+            <div class="stat-l">Creator Earnings Processed</div>
+        </div>
+        <div class="stat-cell fu d2">
+            <div class="stat-n">98%</div>
+            <div class="stat-l">Campaign Fulfillment Rate</div>
+        </div>
+        <div class="stat-cell fu d3">
+            <div class="stat-n lime">3,400+</div>
+            <div class="stat-l">Brand Campaigns Run</div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MARQUEE
+════════════════════════════════════════════ -->
+<div class="mq">
+    <div class="mq-track">
+        <span class="mq-item"><span class="mq-dot"></span>Story Mentions</span>
+        <span class="mq-item"><span class="mq-dot"></span>Reel Sponsorships</span>
+        <span class="mq-item"><span class="mq-dot"></span>TikTok Campaigns</span>
+        <span class="mq-item"><span class="mq-dot"></span>UGC Packages</span>
+        <span class="mq-item"><span class="mq-dot"></span>Brand Ambassadors</span>
+        <span class="mq-item"><span class="mq-dot"></span>Product Reviews</span>
+        <span class="mq-item"><span class="mq-dot"></span>Whitelisting Rights</span>
+        <span class="mq-item"><span class="mq-dot"></span>Creator Bundles</span>
+        <span class="mq-item"><span class="mq-dot"></span>Giveaway Collabs</span>
+        <span class="mq-item"><span class="mq-dot"></span>Monthly Retainers</span>
+        <span class="mq-item"><span class="mq-dot"></span>Event Appearances</span>
+        <span class="mq-item"><span class="mq-dot"></span>Affiliate Campaigns</span>
+        <!-- duplicate -->
+        <span class="mq-item"><span class="mq-dot"></span>Story Mentions</span>
+        <span class="mq-item"><span class="mq-dot"></span>Reel Sponsorships</span>
+        <span class="mq-item"><span class="mq-dot"></span>TikTok Campaigns</span>
+        <span class="mq-item"><span class="mq-dot"></span>UGC Packages</span>
+        <span class="mq-item"><span class="mq-dot"></span>Brand Ambassadors</span>
+        <span class="mq-item"><span class="mq-dot"></span>Product Reviews</span>
+        <span class="mq-item"><span class="mq-dot"></span>Whitelisting Rights</span>
+        <span class="mq-item"><span class="mq-dot"></span>Creator Bundles</span>
+        <span class="mq-item"><span class="mq-dot"></span>Giveaway Collabs</span>
+        <span class="mq-item"><span class="mq-dot"></span>Monthly Retainers</span>
+        <span class="mq-item"><span class="mq-dot"></span>Event Appearances</span>
+        <span class="mq-item"><span class="mq-dot"></span>Affiliate Campaigns</span>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TWO-SIDED
+════════════════════════════════════════════ -->
+<section class="sec" id="brands">
+    <div class="wrap">
+        <div class="fu" style="margin-bottom:72px">
+            <span class="tag tag-white">✦ Two-sided marketplace</span>
+            <h2 class="dlg" style="margin-top:24px;max-width:680px">Built for both sides<br>of every deal.</h2>
+        </div>
+    </div>
+    <div class="split-grid">
+        <div class="split-panel fu">
+            <div class="sp-num">01</div>
+            <div class="sp-ico">🎬</div>
+            <div class="sp-title">For Creators</div>
+            <p class="sp-sub">Stop pitching in DMs. Build a professional storefront and turn your audience into recurring, predictable revenue.</p>
+            <ul class="sp-list">
+                <li class="sp-item"><span class="sp-check">✦</span>Custom creator storefront + auto-generated media kit</li>
+                <li class="sp-item"><span class="sp-check">✦</span>List packages with real deliverables, pricing &amp; timelines</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Instant checkout — brands buy without the email back-and-forth</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Escrow-protected payments, released on delivery</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Operational ratings that build long-term brand trust</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Monthly retainers, UGC licensing &amp; rights management</li>
+            </ul>
+            <a href="#" class="btn lime-btn">Build Your Storefront →</a>
+        </div>
+        <div class="split-panel fu d2">
+            <div class="sp-num">02</div>
+            <div class="sp-ico">🏷️</div>
+            <div class="sp-title">For Brands &amp; Buyers</div>
+            <p class="sp-sub">Forget agencies. Discover the right creators, compare packages with real data, buy instantly, manage everything in one place.</p>
+            <ul class="sp-list">
+                <li class="sp-item"><span class="sp-check">✦</span>Search by niche, audience, location, platform &amp; budget</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Compare creator profiles with verified performance metrics</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Buy packages instantly — no negotiation, no agency fees</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Submit creative brief &amp; track deliverables in real time</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Milestone-based escrow release — pay only on delivery</li>
+                <li class="sp-item"><span class="sp-check">✦</span>Bundle multiple creators into one campaign checkout</li>
+            </ul>
+            <a href="#" class="btn ghost-btn">Find Creators →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CREATOR CARDS (editorial)
+════════════════════════════════════════════ -->
+<section class="sec" style="background:var(--s1)" id="creators">
+    <div class="wrap">
+        <div class="creators-intro fu">
+            <div>
+                <span class="tag tag-lime">✦ Creator Storefronts</span>
+                <h2 class="dlg" style="margin-top:24px">Real creators.<br>Real prices.</h2>
+            </div>
+            <a href="#" class="btn ghost-btn">Browse all 12,000+ creators →</a>
+        </div>
+        <div class="editorial-grid">
+
+            <!-- Spotlight card -->
+            <div class="card-spot fu">
+                <div class="spot-banner">
+                    <span style="z-index:1;position:relative">💄</span>
+                </div>
+                <div class="spot-body">
+                    <div class="spot-top">
+                        <div class="spot-av" style="background:linear-gradient(135deg,#FF2D55,#FF9500)">ML</div>
+                        <div class="spot-vrf">✦ Verified Creator</div>
+                    </div>
+                    <div class="spot-name">Maya Lopez</div>
+                    <div class="spot-niche">Lifestyle &amp; Beauty · Los Angeles, CA</div>
+                    <div class="spot-stats">
+                        <div><div class="spot-sn">284K</div><div class="spot-sl">Followers</div></div>
+                        <div><div class="spot-sn" style="color:var(--lime)">6.4%</div><div class="spot-sl">Eng. Rate</div></div>
+                        <div><div class="spot-sn">4.9★</div><div class="spot-sl">Rating</div></div>
+                    </div>
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px">
+                        <span class="tag tag-white">Instagram</span>
+                        <span class="tag tag-white">TikTok</span>
+                        <span class="tag tag-white">YouTube</span>
+                    </div>
+                    <div class="spot-pkgs">
+                        <div class="spot-pkg"><span class="spot-pname">Story Mention (24h)</span><span class="spot-pprice">$180</span></div>
+                        <div class="spot-pkg"><span class="spot-pname">Dedicated Reel</span><span class="spot-pprice">$650</span></div>
+                        <div class="spot-pkg"><span class="spot-pname">UGC Pack (5 assets)</span><span class="spot-pprice">$900</span></div>
+                        <div class="spot-pkg"><span class="spot-pname">Monthly Ambassador</span><span class="spot-pprice">$2,400/mo</span></div>
+                    </div>
+                    <a href="#" class="spot-book">Book Maya →</a>
+                </div>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card-sm fu d2">
+                <div class="sm-head">
+                    <div class="sm-av" style="background:linear-gradient(135deg,#0A84FF,#30D158)">JK</div>
+                    <div class="sm-info">
+                        <div class="sm-name">Jordan Kim</div>
+                        <div class="sm-niche">Fitness &amp; Health · New York</div>
+                    </div>
+                </div>
+                <div class="sm-stats">
+                    <div class="sm-stat-box"><div class="sm-sn">91K</div><div class="sm-sl">Followers</div></div>
+                    <div class="sm-stat-box"><div class="sm-sn" style="color:var(--lime)">9.2%</div><div class="sm-sl">Eng. Rate</div></div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+                    <span class="tag tag-white">Instagram</span>
+                    <span class="tag tag-white">TikTok</span>
+                </div>
+                <div class="sm-pkg"><span class="sm-pn">Product Review Reel</span><span class="sm-pp" style="color:var(--lime)">$400</span></div>
+                <div class="sm-pkg"><span class="sm-pn">UGC Pack (5 videos)</span><span class="sm-pp" style="color:var(--lime)">$750</span></div>
+                <div class="sm-pkg"><span class="sm-pn">Affiliate Launch</span><span class="sm-pp">$300 + 10%</span></div>
+                <a href="#" class="sm-book">Book Jordan →</a>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card-sm fu d3">
+                <div class="sm-head">
+                    <div class="sm-av" style="background:linear-gradient(135deg,#FFD60A,#FF9500)">AR</div>
+                    <div class="sm-info">
+                        <div class="sm-name">Aisha Rivera</div>
+                        <div class="sm-niche">Food &amp; Dining · Miami, FL</div>
+                    </div>
+                </div>
+                <div class="sm-stats">
+                    <div class="sm-stat-box"><div class="sm-sn">156K</div><div class="sm-sl">Followers</div></div>
+                    <div class="sm-stat-box"><div class="sm-sn" style="color:var(--lime)">7.8%</div><div class="sm-sl">Eng. Rate</div></div>
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">
+                    <span class="tag tag-white">TikTok</span>
+                    <span class="tag tag-white">Instagram</span>
+                </div>
+                <div class="sm-pkg"><span class="sm-pn">Restaurant Feature</span><span class="sm-pp" style="color:var(--lime)">$320</span></div>
+                <div class="sm-pkg"><span class="sm-pn">Brand Integration Reel</span><span class="sm-pp" style="color:var(--lime)">$580</span></div>
+                <div class="sm-pkg"><span class="sm-pn">Event Coverage</span><span class="sm-pp">$1,200</span></div>
+                <a href="#" class="sm-book">Book Aisha →</a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     INTERSTITIAL QUOTE
+════════════════════════════════════════════ -->
+<div class="interstitial">
+    <p class="inter-text">"A marketplace where creators sell brand partnership packages through professional storefronts — and businesses buy, manage, and scale creator campaigns in one place."</p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════════ -->
+<section class="sec how-sec" id="how">
+    <div class="wrap">
+        <div class="how-header fu">
+            <div>
+                <span class="tag tag-white">✦ Process</span>
+                <h2 class="dlg" style="margin-top:24px">How it works.</h2>
+            </div>
+            <div class="how-tabs">
+                <button class="how-tab on" onclick="sw('cr')">For Creators</button>
+                <button class="how-tab" onclick="sw('br')">For Brands</button>
+            </div>
+        </div>
+        <div id="cr-steps" class="chapters">
+            <div class="chapter">
+                <div class="ch-num"><span class="ch-lime">01</span></div>
+                <div class="ch-ico">🎭</div>
+                <div class="ch-title">Build your storefront</div>
+                <p class="ch-desc">Create a professional creator page with bio, audience stats, content style, niche, and social proof. It's your brand deal landing page — always working for you.</p>
+            </div>
+            <div class="chapter">
+                <div class="ch-num"><span class="ch-lime">02</span></div>
+                <div class="ch-ico">📦</div>
+                <div class="ch-title">List your packages</div>
+                <p class="ch-desc">Package your influence into structured, priced deliverables. Story mentions, Reels, UGC packs, monthly retainers — clear enough that brands can buy with one click.</p>
+            </div>
+            <div class="chapter">
+                <div class="ch-num"><span class="ch-lime">03</span></div>
+                <div class="ch-ico">💸</div>
+                <div class="ch-title">Get booked &amp; paid</div>
+                <p class="ch-desc">Brands find you, buy your package, submit their brief, and you deliver. Funds held in escrow and released when you complete the work. Zero back-and-forth.</p>
+            </div>
+        </div>
+        <div id="br-steps" class="chapters" style="display:none">
+            <div class="chapter">
+                <div class="ch-num"><span class="ch-lime">01</span></div>
+                <div class="ch-ico">🔍</div>
+                <div class="ch-title">Discover creators</div>
+                <p class="ch-desc">Filter by niche, location, audience demographics, platform, follower range, and engagement rate. Compare profiles side by side with verified data.</p>
+            </div>
+            <div class="chapter">
+                <div class="ch-num"><span class="ch-lime">02</span></div>
+                <div class="ch-ico">🛒</div>
+                <div class="ch-title">Buy &amp; brief</div>
+                <p class="ch-desc">Pick a package and checkout instantly. Submit your campaign brief, assets, and deadlines. No emails, no negotiation, no agencies taking a cut.</p>
+            </div>
+            <div class="chapter">
+                <div class="ch-num"><span class="ch-lime">03</span></div>
+                <div class="ch-ico">📊</div>
+                <div class="ch-title">Track &amp; scale</div>
+                <p class="ch-desc">Approve content, release payment, track performance. Bundle multiple creators for one campaign. Scale what works with analytics and repeat bookings.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PACKAGES
+════════════════════════════════════════════ -->
+<section class="sec">
+    <div class="wrap">
+        <div class="fu" style="margin-bottom:60px">
+            <span class="tag tag-lime">✦ What creators sell</span>
+            <h2 class="dlg" style="margin-top:24px;max-width:640px">Productized influence.<br>Not vague pitches.</h2>
+            <p class="tlg mut" style="margin-top:16px;max-width:520px">Every package has clear deliverables, pricing, and timelines. Brands know exactly what they're buying.</p>
+        </div>
+        <div class="pkg-grid">
+            <div class="pkg-card fu">
+                <div class="pk-ico">📱</div>
+                <div class="pk-title">Story Mention</div>
+                <div class="pk-desc">24-hour story placement with swipe-up or link in bio. Fast, effective, affordable reach.</div>
+                <div class="pk-price"><span class="pk-from">from</span><span class="pk-amt">$75</span></div>
+                <ul class="pk-list"><li class="pk-li">1 story slide, 24h visibility</li><li class="pk-li">Link or CTA included</li><li class="pk-li">Delivered within 48h</li></ul>
+            </div>
+            <div class="pkg-card hot fu d1">
+                <div class="pk-ico">🎬</div>
+                <div class="pk-title">Dedicated Reel / TikTok</div>
+                <div class="pk-desc">Full short-form video dedicated entirely to the brand. The gold standard of creator sponsorships.</div>
+                <div class="pk-price"><span class="pk-from">from</span><span class="pk-amt">$350</span></div>
+                <ul class="pk-list"><li class="pk-li">30–90 sec branded content</li><li class="pk-li">1 revision included</li><li class="pk-li">Usage rights optional</li><li class="pk-li">Approval before post</li></ul>
+            </div>
+            <div class="pkg-card fu d2">
+                <div class="pk-ico">📦</div>
+                <div class="pk-title">UGC Content Pack</div>
+                <div class="pk-desc">Unposted content for brand ads, emails, owned channels. Full rights. No posting required.</div>
+                <div class="pk-price"><span class="pk-from">from</span><span class="pk-amt">$500</span></div>
+                <ul class="pk-list"><li class="pk-li">3–10 video/photo assets</li><li class="pk-li">Full usage rights</li><li class="pk-li">Raw + edited versions</li></ul>
+            </div>
+            <div class="pkg-card fu d3">
+                <div class="pk-ico">🤝</div>
+                <div class="pk-title">Monthly Ambassador</div>
+                <div class="pk-desc">Ongoing brand partnership with recurring exposure and multiple content touchpoints per month.</div>
+                <div class="pk-price"><span class="pk-from">from</span><span class="pk-amt">$1,200</span><span class="pk-per">/mo</span></div>
+                <ul class="pk-list"><li class="pk-li">Monthly content calendar</li><li class="pk-li">Multiple touchpoints</li><li class="pk-li">Exclusive deal structure</li><li class="pk-li">Dedicated dashboard</li></ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FEATURES
+════════════════════════════════════════════ -->
+<section class="sec" style="padding-bottom:0;background:var(--s1)">
+    <div class="wrap">
+        <div class="fu" style="margin-bottom:60px">
+            <span class="tag tag-white">✦ Platform</span>
+            <h2 class="dlg" style="margin-top:24px;max-width:600px">Everything you need.<br>Nothing you don't.</h2>
+        </div>
+    </div>
+    <div class="feat-grid">
+        <div class="feat-block fi"><span class="feat-ico">🏪</span><div class="feat-title">Creator Storefronts</div><p class="feat-desc">Polished landing pages with bio, stats, packages, portfolio, reviews, and auto-generated media kit — all in one place.</p></div>
+        <div class="feat-block fi d1"><span class="feat-ico">🔐</span><div class="feat-title">Escrow Payments</div><p class="feat-desc">Funds held securely until deliverables are approved. Zero risk on either side. Milestone-based release built in.</p></div>
+        <div class="feat-block fi d2"><span class="feat-ico">📋</span><div class="feat-title">Campaign Workflow</div><p class="feat-desc">Brief submission, content approval, deadline tracking, revision management, and milestone releases — all inside Brambo.</p></div>
+        <div class="feat-block fi"><span class="feat-ico">🔍</span><div class="feat-title">Smart Discovery</div><p class="feat-desc">Filter by niche, audience demographics, engagement rate, location, budget, and platform. Find exactly the right creator, fast.</p></div>
+        <div class="feat-block fi d1"><span class="feat-ico">📊</span><div class="feat-title">Performance Analytics</div><p class="feat-desc">Track fulfillment rates, response times, campaign results, and estimated ROI across all your creator partnerships in real time.</p></div>
+        <div class="feat-block fi d2"><span class="feat-ico">🧩</span><div class="feat-title">Creator Bundles</div><p class="feat-desc">Purchase campaigns across multiple creators in one checkout. City bundles, niche packs, launch squads — scale your reach instantly.</p></div>
+        <div class="feat-block fi"><span class="feat-ico">⚖️</span><div class="feat-title">Rights &amp; Licensing</div><p class="feat-desc">Separate pricing for organic posts, whitelisting, paid ad usage, exclusivity, and content duration. Rights, handled cleanly.</p></div>
+        <div class="feat-block fi d1"><span class="feat-ico">🤖</span><div class="feat-title">AI Matching</div><p class="feat-desc">Our AI recommends creators for your campaign, flags underpriced packages, and builds optimal creator mixes by budget and goal.</p></div>
+        <div class="feat-block fi d2"><span class="feat-ico">📝</span><div class="feat-title">Contract Templates</div><p class="feat-desc">Built-in legal templates for standard deals. Downloadable for complex ones. No lawyers required for simple campaigns.</p></div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PRICING
+════════════════════════════════════════════ -->
+<section class="sec" id="pricing">
+    <div class="wrap">
+        <div class="fu" style="text-align:center;margin-bottom:72px">
+            <span class="tag tag-lime">✦ Simple Pricing</span>
+            <h2 class="dlg" style="margin-top:24px">Start free.<br>Scale when ready.</h2>
+            <p class="tlg mut" style="max-width:460px;margin:16px auto 0">Creator plans with no hidden fees, plus a platform fee on completed bookings.</p>
+        </div>
+        <div class="pr-grid">
+            <div class="pr-card fu">
+                <div class="pr-tier">Creator</div>
+                <div class="pr-name">Starter</div>
+                <p class="pr-desc">For new creators building their first professional storefront.</p>
+                <div class="pr-price"><span class="pr-cur">$</span><span class="pr-amt">0</span><span class="pr-per">/month</span></div>
+                <p class="pr-note">Free forever · 10% platform fee on bookings</p>
+                <div class="pr-div"></div>
+                <ul class="pr-list">
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Public creator storefront</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Up to 3 packages</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Basic analytics</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Escrow payments</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Messaging system</li>
+                </ul>
+                <a href="#" class="btn ghost-btn" style="width:100%;justify-content:center">Get Started Free</a>
+            </div>
+            <div class="pr-card hot fu d2">
+                <div class="pr-tier">Creator</div>
+                <div class="pr-name">Pro</div>
+                <p class="pr-desc">For creators running their influence like a real business.</p>
+                <div class="pr-price"><span class="pr-cur">$</span><span class="pr-amt">29</span><span class="pr-per">/month</span></div>
+                <p class="pr-note">Reduced 7% platform fee on bookings</p>
+                <div class="pr-div"></div>
+                <ul class="pr-list">
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Everything in Starter</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Unlimited packages</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Priority search placement</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Advanced analytics</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>AI media kit builder</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Verified creator badge</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Custom offer requests</li>
+                </ul>
+                <a href="#" class="btn lime-btn" style="width:100%;justify-content:center">Start Pro →</a>
+            </div>
+            <div class="pr-card fu d3">
+                <div class="pr-tier">Agency</div>
+                <div class="pr-name">Agency</div>
+                <p class="pr-desc">For managers and agencies handling multiple creator accounts.</p>
+                <div class="pr-price"><span class="pr-cur">$</span><span class="pr-amt">99</span><span class="pr-per">/month</span></div>
+                <p class="pr-note">Reduced 5% platform fee on bookings</p>
+                <div class="pr-div"></div>
+                <ul class="pr-list">
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Everything in Pro</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Manage up to 50 creators</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Multi-creator dashboard</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>White-label storefronts</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>3 team seats included</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Campaign CRM</li>
+                    <li class="pr-feat"><span class="pr-chk">✓</span>Bulk deal management</li>
+                </ul>
+                <a href="#" class="btn ghost-btn" style="width:100%;justify-content:center">Contact Sales</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     CTA FINALE
+════════════════════════════════════════════ -->
+<section class="cta-sec">
+    <div class="cta-bg-text">BRAMBO</div>
+    <div class="wrap cta-inner">
+        <div class="fu">
+            <span class="tag tag-lime" style="margin-bottom:28px;display:inline-flex">✦ Join Brambo</span>
+            <h2 class="dxl cta-hl" style="margin-top:24px">
+                Your influence<br>
+                <span style="color:var(--lime)">is a product.</span><br>
+                Start selling it.
+            </h2>
+            <p class="tlg mut cta-sub" style="margin-top:24px">Join thousands of creators who've turned their audience into a business — and the brands discovering them every day.</p>
+            <div class="cta-btns" style="margin-top:48px">
+                <a href="#" class="btn lime-btn btnlg">I'm a Creator →</a>
+                <a href="#" class="btn ghost-btn btnlg">I'm a Brand →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════ -->
+<footer class="foot">
+    <div class="wrap">
+        <div class="foot-grid">
+            <div class="foot-brand">
+                <svg viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:26px;width:auto">
+                    <rect width="36" height="36" rx="8" fill="#B8FF00"/>
+                    <path d="M10 8h10c3.314 0 6 2.686 6 6s-2.686 6-6 6H10V8z" fill="#0A0A0A"/>
+                    <path d="M10 20h11c3.866 0 7 3.134 7 7s-3.134 7-7 7H10V20z" fill="#0A0A0A"/>
+                    <rect x="10" y="8" width="3" height="26" fill="#0A0A0A"/>
+                    <text x="48" y="26" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="22" fill="#FFFFFF" letter-spacing="-0.03em">RAMBO</text>
+                </svg>
+                <p>Where creators build bookable brand storefronts and businesses buy, manage, and scale creator partnerships — without agency friction.</p>
+                <div class="foot-socs">
+                    <a href="#" class="foot-soc">𝕏</a>
+                    <a href="#" class="foot-soc">📸</a>
+                    <a href="#" class="foot-soc">▶</a>
+                    <a href="#" class="foot-soc">in</a>
+                </div>
+            </div>
+            <div class="foot-col">
+                <h4>Product</h4>
+                <ul class="foot-links">
+                    <li><a href="#">For Creators</a></li>
+                    <li><a href="#">For Brands</a></li>
+                    <li><a href="#">Campaign Tools</a></li>
+                    <li><a href="#">Analytics</a></li>
+                    <li><a href="#">Integrations</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Company</h4>
+                <ul class="foot-links">
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="foot-col">
+                <h4>Resources</h4>
+                <ul class="foot-links">
+                    <li><a href="#">Creator Guide</a></li>
+                    <li><a href="#">Brand Playbook</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">API Docs</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="foot-bot">
+            <span class="foot-copy">© 2025 Brambo, Inc. All rights reserved.</span>
+            <div class="foot-legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ── CUSTOM CURSOR ──
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animCursor() {
+        cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+        rx += (mx - rx) * .12; ry += (my - ry) * .12;
+        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+        requestAnimationFrame(animCursor);
+    }
+    animCursor();
+    document.querySelectorAll('a,button').forEach(el => {
+        el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(2)'; ring.style.transform = 'translate(-50%,-50%) scale(1.5)'; });
+        el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; });
+    });
+
+    // ── NAV SCROLL ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('sc', window.scrollY > 60), { passive: true });
+
+    // ── HERO WORD REVEAL ──
+    const hl = document.getElementById('hero-hl');
+    const raw = hl.textContent.trim();
+    const limeWords = ['creators','like','you','book'];
+    hl.innerHTML = raw.split(' ').map(w => {
+        const cl = limeWords.includes(w.toLowerCase()) ? 'word em' : 'word';
+        return `<span class="${cl}">${w}</span>`;
+    }).join(' ');
+    setTimeout(() => {
+        hl.querySelectorAll('.word').forEach((w, i) => {
+            setTimeout(() => w.classList.add('vis'), i * 80);
+        });
+    }, 200);
+
+    // ── SCROLL ANIMATIONS ──
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('v'); });
+    }, { threshold: 0.07 });
+    document.querySelectorAll('.fu,.fi').forEach(el => obs.observe(el));
+
+    // ── TAB SWITCHER ──
+    function sw(type) {
+        const tabs = document.querySelectorAll('.how-tab');
+        const cr = document.getElementById('cr-steps');
+        const br = document.getElementById('br-steps');
+        if(type === 'cr') {
+            tabs[0].classList.add('on'); tabs[1].classList.remove('on');
+            cr.style.display = 'grid'; br.style.display = 'none';
+        } else {
+            tabs[1].classList.add('on'); tabs[0].classList.remove('on');
+            br.style.display = 'grid'; cr.style.display = 'none';
+        }
+    }
+
+    // ── NUMBER COUNTER ──
+    function countUp(el, end, suffix) {
+        let n = 0, step = end / 60;
+        const t = setInterval(() => {
+            n = Math.min(n + step, end);
+            el.textContent = (n >= 1000 ? (n/1000).toFixed(1)+'K' : Math.floor(n)) + suffix;
+            if(n >= end) clearInterval(t);
+        }, 20);
+    }
+</script>
+</body>
+</html>
