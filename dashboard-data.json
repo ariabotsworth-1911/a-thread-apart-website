@@ -1,0 +1,99 @@
+﻿{
+    "generatedAt":  "2026-03-15T20:56:34.4368482-07:00",
+    "company":  "A Thread Apart",
+    "objective":  "Close the first deal, get one creator storefront live, execute one campaign, and capture proof points.",
+    "status":  {
+                   "topBlockers":  {
+
+                                   },
+                   "immediatePriorityOrder":  [
+                                                  "Verify correct Shopify store/domain/token",
+                                                  "Lock first creator",
+                                                  "Confirm active brand/agency lead status",
+                                                  "Reduce site scope to MVP only",
+                                                  "Launch first storefront"
+                                              ],
+                   "operatingCadence":  {
+                                            "morningBrief":  "8 AM PT",
+                                            "afternoonCheckIn":  "12 PM PT",
+                                            "eveningWrapUp":  "8 PM PT"
+                                        }
+               },
+    "lanes":  {
+
+              },
+    "storefront":  {
+                       "mvpScope":  {
+
+                                    },
+                       "launchChecklist":  {
+
+                                           }
+                   },
+    "operatingRules":  {
+                           "posture":  [
+                                           "Keep scope narrow",
+                                           "Manual before automated",
+                                           "Revenue work first",
+                                           "One storefront and one campaign before expansion"
+                                       ],
+                           "requiredLaneFields":  [
+                                                      "current stage",
+                                                      "last action",
+                                                      "next action",
+                                                      "due date",
+                                                      "blocker"
+                                                  ],
+                           "escalations":  [
+                                               "brand/agency response",
+                                               "creator candidate identified or blocked",
+                                               "Shopify access issue",
+                                               "timeline or budget commitment",
+                                               "anything preventing storefront launch"
+                                           ]
+                       },
+    "memory":  {
+                   "commandCenter":  {
+                                         "location":  "skills/command-center/",
+                                         "access":  "http://localhost:3333",
+                                         "dailyReminder":  "9 AM Pacific"
+                                     },
+                   "machineNotes":  [
+                                        "Windows users on this machine: admin, mproc, terminator",
+                                        "Port Master installed: user has port-blocking/firewall software that may interfere with local tunnels, OAuth callbacks, or network services. Check Port Master settings if network operations fail unexpectedly.",
+                                        "Google Cloud SDK: `C:\\Program Files (x86)\\Google\\Cloud SDK\\`",
+                                        "Google Cloud project: \"OpenClaw\" (vertical-wall-489509-h2)",
+                                        "Gmail skill: `skills/gmail/` (5 scripts: auth, read, send, search, manage)"
+                                    ]
+               },
+    "latestReview":  {
+                         "weekly":  {
+                                        "leadsAdded":  null,
+                                        "pipelineMovement":  null,
+                                        "campaignsInProgress":  null,
+                                        "merchStorefrontUpdates":  null,
+                                        "revenue":  null,
+                                        "topPrioritiesAhead":  {
+
+                                                               },
+                                        "blockers":  {
+
+                                                     }
+                                    },
+                         "eveningWrap":  {
+                                             "doneToday":  {
+
+                                                           },
+                                             "rolledToTomorrow":  {
+
+                                                                  }
+                                         }
+                     },
+    "sources":  {
+                    "commandBoard":  "C:\\Users\\admin\\.openclaw\\workspace\\ATA_COMMAND_BOARD.md",
+                    "memory":  "C:\\Users\\admin\\.openclaw\\workspace\\MEMORY.md",
+                    "todayLog":  "C:\\Users\\admin\\.openclaw\\workspace\\memory\\2026-03-15.md",
+                    "operatingRules":  "C:\\Users\\admin\\.openclaw\\workspace\\ATA_LIVE_OPERATING_RULES.md",
+                    "repo":  "C:\\Users\\admin\\.openclaw\\workspace\\temp\\a-thread-apart-website"
+                }
+}
